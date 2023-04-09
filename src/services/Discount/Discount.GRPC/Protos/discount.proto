@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option csharp_namespace = "Discount.GRPC.Protos";
+
+
+// la sintaxis es proto3, aqui vamos a definir el servicio y los parametros que se van a llamar
+	// en lugar de controllers, aqui se define la firma de llamadas
+	// este seria el contrato de los servicios
+service DiscountProtoService{
+	
+	//GetDiscount es en nombre del servicio que va a ser expuesto
+	//GetDiscountRequest parametro de entrada,
+	rpc  GetDiscount(GetDiscountRequest) returns (CouponModel);
+
+	rpc CreateDiscount (CreateDiscountRequest) returns (CouponModel);
+	rpc UpdateDiscount (UpdateDiscountRequest) returns (CouponModel);
+	rpc DeleteDiscount (DeleteDiscountRequest) returns (DeleteDiscountResponse);
+}
+
+// seria el parametro de entrada en GetDiscount, seria como una clase en c#, 
+message GetDiscountRequest {
+	string productName = 1;	// todos los miembros de la "clase" se deben enumerar, por ejemplo si 
+	// se necesitara otro seria string productDesc = 2;
+}
+
+
+//Objeto respuesta en los metodos: GetDiscount, CreateDiscount y UpdateDiscount
+message CouponModel {
+	int32 id = 1;
+	string productName = 2;
+	string description = 3;
+	int32 amount = 4;
+}
+
+message CreateDiscountRequest {
+	CouponModel coupon = 1;
+}
+
+message UpdateDiscountRequest {
+	CouponModel coupon = 1;
+}
+
+message DeleteDiscountRequest {
+	string productName = 1;
+}
+
+message DeleteDiscountResponse {
+	bool success = 1;
+}
