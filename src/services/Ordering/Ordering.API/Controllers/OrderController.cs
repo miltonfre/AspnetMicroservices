@@ -10,13 +10,13 @@ namespace Ordering.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class OrderController : ControllerBase
+    public class OrderController:ControllerBase
     {
         private readonly IMediator _mediator;
 
         public OrderController(IMediator mediator)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mediator = mediator;
         }
 
         [HttpGet("{userName}", Name = "GetOrder")]
@@ -27,8 +27,8 @@ namespace Ordering.API.Controllers
             var orders = await _mediator.Send(query);
             return Ok(orders);
         }
-
-        // testing purpose
+        // testing purpose, this method will not use because
+        // checkout order will be triggered from RabbitMQ
         [HttpPost(Name = "CheckoutOrder")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<int>> CheckoutOrder([FromBody] CheckoutOrderCommand command)
@@ -36,7 +36,6 @@ namespace Ordering.API.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
-
         [HttpPut(Name = "UpdateOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -57,6 +56,5 @@ namespace Ordering.API.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
-
     }
 }
